@@ -16,24 +16,24 @@ timezone = pytz.timezone('Asia/Tokyo')
 
 def get_all_tweets(user_id):
     api = oauth()
-    data = []
+    rows = []
 
-    results = tweepy.Cursor(
+    tweets = tweepy.Cursor(
         api.user_timeline,
         id=user_id,
         tweet_mode='extended'
     ).items()
     
-    for status in results:
-        tweet='\t'.join([
-            status.id_str, 
-            format_datetime(status.created_at), 
-            status.full_text.replace('\n', '（改行）')
+    for tweet in tweets:
+        row='\t'.join([
+            tweet.id_str, 
+            format_datetime(tweet.created_at), 
+            tweet.full_text.replace('\n', '（改行）')
         ])
-        data.append(tweet)
+        rows.append(row)
     
-    print(str(len(data)) + ' tweets found')
-    write_tsv(data)
+    print(str(len(rows)) + ' tweets found')
+    write_tsv(rows)
 
 
 def oauth():
